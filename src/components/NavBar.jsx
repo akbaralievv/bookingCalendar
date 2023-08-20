@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 
-function Navbar() {
+function NavBar() {
   return (
     <header className="header">
       <NavLink to={'/'} className={({ isActive }) => (isActive ? 'active' : '')}>
@@ -13,4 +13,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default NavBar;
