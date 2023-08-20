@@ -1,0 +1,42 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+.demo-loadmore-list {
+    min-height: 350px;
+}
+.highlighted-date{
+    background-color: gray;
+    color: white;
+}
+.header{
+    display: flex;
+    gap: 40px;
+    height: 100px;
+    justify-content: center;
+    align-items: center;
+}
+.header a{
+    text-decoration: none;
+    font-family: 'Courier New', Courier, sans-serif;
+    font-weight: 500;
+    color: black;
+}
+.ant-form-item-row{
+    justify-content: space-between;
+    overflow: '';
+}
+.form{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 50px;
+}
+.list{
+    width: 90%;
+    margin: 0 auto;
+}
+.active {
+    border-bottom: 1px solid black;
+}
