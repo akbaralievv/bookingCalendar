@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Button, DatePicker, Form, Input } from 'antd';
+import { Button, DatePicker, Form, Input, TimePicker } from 'antd';
 import { url } from '../components/api';
 
 const Main = () => {
   const [values, setValues] = useState({
     name: '',
     date: '',
+    time: '',
   });
+
   const [form] = Form.useForm();
   const [bookedDates, setBookedDates] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -27,6 +29,7 @@ const Main = () => {
       console.error(error);
     }
   };
+
   useEffect(() => {
     fetchBookedDates();
   }, []);
@@ -43,7 +46,7 @@ const Main = () => {
   };
 
   useEffect(() => {
-    if (values.name && values.date) {
+    if (values.name && values.date && values.time) {
       const sendRequest = async () => {
         setLoading(true);
         try {
@@ -55,6 +58,7 @@ const Main = () => {
 
           if (response.ok) {
             // const task = await response.json();
+            setValues((prev) => ({ ...prev, name: '', date: '', time: '' }));
             form.resetFields();
             fetchBookedDates();
           } else {
@@ -69,11 +73,21 @@ const Main = () => {
 
       sendRequest();
     }
+    return;
   }, [values, form]);
 
   const isBookedDate = (date) => {
     const dateFormatted = date.format('YYYY-MM-DD');
     return bookedDates.includes(dateFormatted);
+  };
+
+  const handleChange = (time) => {
+    if (time) {
+      const formattedTime = time.format('HH:mm');
+      setValues((prev) => ({ ...prev, time: formattedTime }));
+    } else {
+      setValues((prev) => ({ ...prev, time: '' }));
+    }
   };
 
   return (
@@ -104,6 +118,9 @@ const Main = () => {
               return current.date();
             }}
           />
+        </Form.Item>
+        <Form.Item label="Time" name="timeField">
+          <TimePicker onChange={handleChange} showSecond={false} />
         </Form.Item>
         <Form.Item label="Submit">
           <Button htmlType="submit" disabled={loading}>

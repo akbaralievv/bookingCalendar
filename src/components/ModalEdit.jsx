@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Modal, DatePicker } from 'antd';
+import { Modal, DatePicker, TimePicker } from 'antd';
 import PropTypes from 'prop-types';
 
 import { url } from './api';
@@ -17,6 +17,7 @@ const ModalEdit = ({
 }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [changedDate, setChangedDate] = useState('');
+  const [changeTime, setChangeTime] = useState('');
   const [bookedDates, setBookedDates] = useState([]);
 
   const fetchBookedDates = async () => {
@@ -44,13 +45,23 @@ const ModalEdit = ({
     fetch(url + '/' + idData, {
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ date: changedDate }),
+      body: JSON.stringify(
+        changeTime && changedDate
+          ? { date: changedDate, time: changeTime }
+          : changeTime
+          ? { time: changeTime }
+          : changedDate
+          ? { date: changedDate }
+          : '',
+      ),
     })
       .then((res) => {
         if (res.ok) {
           fetchData({ setInitLoading, setList, setData });
+          setChangeTime('');
           setCountPage(1);
           setHasMoreData(true);
+          setChangedDate('');
           setOpen(false);
           setConfirmLoading(false);
           return res.json();
@@ -77,6 +88,16 @@ const ModalEdit = ({
     const dateFormatted = date.format('YYYY-MM-DD');
     return bookedDates.includes(dateFormatted);
   };
+
+  const timerChange = (time) => {
+    if (time) {
+      const formattedTime = time.format('HH:mm');
+      setChangeTime(formattedTime);
+    } else {
+      setChangeTime('');
+    }
+  };
+
   return (
     <>
       <Modal
@@ -86,7 +107,7 @@ const ModalEdit = ({
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
         okButtonProps={{
-          disabled: !changedDate && (idData === 0 || idData),
+          disabled: changedDate || changeTime ? false : true,
         }}>
         <DatePicker
           onChange={onChange}
@@ -98,6 +119,7 @@ const ModalEdit = ({
             return current.date();
           }}
         />
+        <TimePicker onChange={timerChange} showSecond={false} />
       </Modal>
     </>
   );

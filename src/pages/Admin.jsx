@@ -78,6 +78,17 @@ function Admin() {
         <Button onClick={onLoadMore}>loading more</Button>
       </div>
     ) : null;
+
+  const formatDate = (date, time) => {
+    const inputDate = new Date(date);
+
+    const day = inputDate.getDate().toString().padStart(2, '0');
+    const month = (inputDate.getMonth() + 1).toString().padStart(2, '0');
+    const year = inputDate.getFullYear();
+
+    return `${day}.${month}.${year} ${time}`;
+  };
+
   return (
     <div className="list">
       {open && (
@@ -111,7 +122,7 @@ function Admin() {
             <Skeleton avatar title={false} loading={item.loading} active>
               <List.Item.Meta
                 title={<a href="https://ant.design">{item.name}</a>}
-                description={item.date}
+                description={formatDate(item.date, item.time)}
               />
             </Skeleton>
           </List.Item>
